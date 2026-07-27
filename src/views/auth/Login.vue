@@ -22,8 +22,8 @@ import { loginConLaravel } from '../../services/auth.service';
     async function funIngresar(){
         try {
             const resp = await loginConLaravel(credenciales.value.email, credenciales.value.password);
-            console.log(resp.data);
-            localStorage.setItem("access_token", resp.data.access_token);
+            console.log(resp);
+            localStorage.setItem("access_token", resp.access_token);
             router.push('/admin');
         } catch (error) {
             

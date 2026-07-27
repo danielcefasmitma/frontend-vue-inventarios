@@ -1,6 +1,11 @@
-import instance from "./api";
+import api from "./api";
 
 export async function loginConLaravel(email: string, password: string){
-    const respuesta = await instance.post('/v1/auth/login', {email, password});
+    const respuesta = await api.post('/v1/auth/login', {email, password});
+    return respuesta.data;
+}
+
+export async function logoutConLaravel() {
+    const respuesta = await api.post("/v1/auth/logout");
     return respuesta;
 }

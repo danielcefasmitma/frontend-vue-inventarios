@@ -1,16 +1,14 @@
 import axios from "axios";
 
-const BASE_URL = "https://laravue2.blumbit.net/back/public";
+const BASE_URL = "https://backinventarios.blumbit.net";
 const BASE_API_URL = `${BASE_URL}/api`;
-
-const token = localStorage.getItem("access_token") || undefined;
 
 const instance = axios.create({
   baseURL: BASE_API_URL,
-  headers: {
+  /*headers: {
     Authorization: "Bearer " + token,
     "Content-Type": "application/json",
-  },
+  },*/
 });
 
 // Interceptor del lado del Cliente.
@@ -31,7 +29,8 @@ instance.interceptors.response.use(
   },
   (error) => {
     if(error.response?.status === 401) {
-      location.href = "/login";
+      localStorage.removeItem("access_token");
+      location.href = "/auth/ingresar";
     }
     return Promise.reject(error);
   },
