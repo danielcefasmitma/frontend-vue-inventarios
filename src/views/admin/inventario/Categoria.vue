@@ -1,8 +1,11 @@
 <template>
-    <h1>Listado de Catogorias</h1>
-    <pre>{{ categorias }}</pre>
     <div class="card">
-        <Button label="Nueva Categoria" @click="visibleDialog = true" />
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+            <h1 class="text-2xl font-bold text-gray-800 tracking-tight">Listado de Categorías</h1>
+            <Button label="Nueva Categoría" icon="pi pi-plus" @click="visibleDialog = true"
+                class="w-full md:w-auto shadow-sm" />
+        </div>
 
         <Dialog v-model:visible="visibleDialog" modal header="Editar Categoria" :style="{ width: '25rem' }">
             <span class="text-surface-500 dark:text-surface-400 block mb-8">Actualizar Informacion.</span>
@@ -20,6 +23,11 @@
             </div>
         </Dialog>
 
+        <!-- Estado de Carga -->
+        <div v-if="cargando" class="flex justify-center items-center py-12">
+            <ProgressSpinner strokeWidth="3" animationDuration=".5s" style="width: 50px; height: 50px"
+                :pt="{ circleTrack: { style: { stroke: 'transparent' } } }" />
+        </div>
 
         <DataTable :value="categorias" tableStyle="min-width: 50rem">
             <Column field="id" header="Id"></Column>
@@ -44,24 +52,34 @@ import categoriaService from '../../../services/categoria.service';
 const categorias = ref<any>([]);
 const categoria = ref<any>({ nombre: "", descripcion: "" });
 const visibleDialog = ref(false);
+const cargando = ref(false);
+
 onMounted(() => {
     funListarCategorias();
 })
 async function funListarCategorias() {
+    cargando.value = true;
     const { data } = await categoriaService.funListar();
     categorias.value = data;
+    cargando.value = false;
 }
 
 async function funGuardarCategoria() {
-    if (categoria.value.id) {
-        await categoriaService.funModificar(categoria.value.id, categoria.value);
-    } else {
-        await categoriaService.funGuardar(categoria.value);
+    try {
+        if (categoria.value.id) {
+            await categoriaService.funModificar(categoria.value.id, categoria.value);
+        } else {
+            await categoriaService.funGuardar(categoria.value);
+        }
+
+        funListarCategorias();
+        visibleDialog.value = false;
+        categoria.value = {};
+    } catch (error) {
+        alert("Ocurrió un error al intentar guardar cambios.")
+        cargando.value = false;
     }
 
-    funListarCategorias();
-    visibleDialog.value = false;
-    categoria.value = {};
 
 }
 

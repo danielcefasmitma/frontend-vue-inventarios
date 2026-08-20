@@ -1,6 +1,6 @@
 <template>
     <h1>Lista de Usuarios</h1>
-    {{ usuario }}
+    {{ usuarios }}
     <form>
         <label for="">Ingrese Nombre</label>
         <input type="text" v-model="usuario.name">
@@ -33,8 +33,8 @@
                     v-model="usuario.password" />
             </div>
             <div class="flex justify-end gap-2">
-                <Button type="button" label="Cancel" severity="secondary" @click="visibleDialog = false"></Button>
-                <Button type="button" label="Save" @click="funGuardarUsuario()"></Button>
+                <Button type="button" label="Cancelar" severity="secondary" @click="visibleDialog = false"></Button>
+                <Button type="button" label="Guardar" @click="funGuardarUsuario()"></Button>
             </div>
         </Dialog>
 
